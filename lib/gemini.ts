@@ -69,7 +69,6 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
     }
   }
 
-  // If no API key or no transactions, return fallback insights
   if (!genAI || transactions.length === 0) {
     return generateFallbackInsights()
   }
@@ -104,7 +103,6 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
     const response = await result.response
     const text = response.text()
 
-    // Try to parse JSON, fallback to structured insights if parsing fails
     try {
       const parsed = JSON.parse(text)
       return parsed
@@ -113,7 +111,6 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
     }
   } catch (error) {
     console.error("Gemini API error:", error)
-    // Return fallback insights instead of error message
     return generateFallbackInsights()
   }
 }

@@ -172,16 +172,16 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="container mx-auto p-6 space-y-6">
-          <Skeleton className="h-8 w-48" />
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="container mx-auto p-4 pt-24 space-y-4 sm:p-6 sm:pt-28">
+          <Skeleton className="h-6 w-32 sm:h-8 sm:w-48" />
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {[...Array(4)].map((_, i) => (
               <Card key={i}>
-                <CardHeader>
-                  <Skeleton className="h-4 w-20" />
+                <CardHeader className="pb-2">
+                  <Skeleton className="h-3 w-16 sm:h-4 sm:w-20" />
                 </CardHeader>
                 <CardContent>
-                  <Skeleton className="h-8 w-24" />
+                  <Skeleton className="h-6 w-20 sm:h-8 sm:w-24" />
                 </CardContent>
               </Card>
             ))}
@@ -194,24 +194,29 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Financial Insights</h1>
-          <Button onClick={generateInsights} disabled={insightsLoading}>
+      <div className="container mx-auto p-4 pt-24 space-y-4 sm:p-6 sm:pt-28 sm:space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
+          <h1 className="text-2xl sm:text-3xl font-bold">Financial Insights</h1>
+          <Button 
+            onClick={generateInsights} 
+            disabled={insightsLoading}
+            size="sm"
+            className="w-full sm:w-auto"
+          >
             <Brain className="h-4 w-4 mr-2" />
             {insightsLoading ? "Generating..." : "Generate AI Insights"}
           </Button>
         </div>
 
         {/* Key Metrics */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Monthly Spending</CardTitle>
-              <IndianRupee className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Monthly Spending</CardTitle>
+              <IndianRupee className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₹{analytics.currentMonthExpenses?.toFixed(2) || "0.00"}</div>
+              <div className="text-lg sm:text-2xl font-bold">₹{analytics.currentMonthExpenses?.toFixed(2) || "0.00"}</div>
               <div className="flex items-center text-xs text-muted-foreground">
                 {analytics.monthlyChange > 0 ? (
                   <TrendingUp className="h-3 w-3 text-red-500 mr-1" />
@@ -227,11 +232,11 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Top Category</CardTitle>
-              <PieChart className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Top Category</CardTitle>
+              <PieChart className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-lg sm:text-2xl font-bold truncate">
                 {analytics.topCategories?.[0]?.category || "N/A"}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -242,11 +247,11 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Budgets</CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Active Budgets</CardTitle>
+              <Target className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{budgets.length}</div>
+              <div className="text-lg sm:text-2xl font-bold">{budgets.length}</div>
               <p className="text-xs text-muted-foreground">
                 {budgets.filter(b => {
                   const spent = transactions
@@ -260,37 +265,37 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Transactions</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-xs sm:text-sm font-medium">Transactions</CardTitle>
+              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{transactions.length}</div>
+              <div className="text-lg sm:text-2xl font-bold">{transactions.length}</div>
               <p className="text-xs text-muted-foreground">Total recorded</p>
             </CardContent>
           </Card>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="trends">Trends</TabsTrigger>
-            <TabsTrigger value="categories">Categories</TabsTrigger>
-            <TabsTrigger value="ai-insights">AI Insights</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 py-2">Overview</TabsTrigger>
+            <TabsTrigger value="trends" className="text-xs sm:text-sm px-2 py-2">Trends</TabsTrigger>
+            <TabsTrigger value="categories" className="text-xs sm:text-sm px-2 py-2">Categories</TabsTrigger>
+            <TabsTrigger value="ai-insights" className="text-xs sm:text-sm px-2 py-2">AI Insights</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Weekly Spending</CardTitle>
-                  <CardDescription>Your daily expenses this week</CardDescription>
+                  <CardTitle className="text-base sm:text-lg">Weekly Spending</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">Your daily expenses this week</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ChartContainer config={{ amount: { label: "Amount", color: "hsl(var(--chart-1))" } }} className="h-[200px]">
+                  <ChartContainer config={{ amount: { label: "Amount", color: "hsl(var(--chart-1))" } }} className="h-[180px] sm:h-[200px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={analytics.weeklyData}>
-                        <XAxis dataKey="day" />
-                        <YAxis />
+                        <XAxis dataKey="day" tick={{ fontSize: 12 }} />
+                        <YAxis tick={{ fontSize: 12 }} />
                         <ChartTooltip content={<ChartTooltipContent />} />
                         <Bar dataKey="amount" fill="hsl(var(--chart-1))" />
                       </BarChart>
@@ -301,18 +306,18 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Top Spending Categories</CardTitle>
-                  <CardDescription>Your highest expense categories</CardDescription>
+                  <CardTitle className="text-base sm:text-lg">Top Spending Categories</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">Your highest expense categories</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {analytics.topCategories?.slice(0, 5).map((item: any, index: number) => (
                       <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline">{index + 1}</Badge>
-                          <span className="font-medium">{item.category}</span>
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <Badge variant="outline" className="text-xs flex-shrink-0">{index + 1}</Badge>
+                          <span className="font-medium text-sm truncate">{item.category}</span>
                         </div>
-                        <span className="font-bold">₹{item.amount.toFixed(2)}</span>
+                        <span className="font-bold text-sm flex-shrink-0">₹{item.amount.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
@@ -324,15 +329,15 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
           <TabsContent value="trends" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Monthly Spending Trend</CardTitle>
-                <CardDescription>Your spending pattern over the last 12 months</CardDescription>
+                <CardTitle className="text-base sm:text-lg">Monthly Spending Trend</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">Your spending pattern over the last 12 months</CardDescription>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={{ amount: { label: "Amount", color: "hsl(var(--chart-2))" } }} className="h-[300px]">
+                <ChartContainer config={{ amount: { label: "Amount", color: "hsl(var(--chart-2))" } }} className="h-[250px] sm:h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.monthlyTrend}>
-                      <XAxis dataKey="month" />
-                      <YAxis />
+                      <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
                       <ChartTooltip content={<ChartTooltipContent />} />
                       <Line 
                         type="monotone" 
@@ -355,16 +360,21 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
           <TabsContent value="ai-insights" className="space-y-4">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-blue-600" />
-                    <CardTitle>AI-Powered Financial Analysis</CardTitle>
+                    <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                    <CardTitle className="text-base sm:text-lg">AI-Powered Financial Analysis</CardTitle>
                   </div>
-                  <Button onClick={generateInsights} disabled={insightsLoading} size="sm">
+                  <Button 
+                    onClick={generateInsights} 
+                    disabled={insightsLoading} 
+                    size="sm"
+                    className="w-full sm:w-auto"
+                  >
                     {insightsLoading ? "Analyzing..." : "Refresh Analysis"}
                   </Button>
                 </div>
-                <CardDescription>
+                <CardDescription className="text-xs sm:text-sm">
                   Get personalized insights and recommendations based on your spending patterns
                 </CardDescription>
               </CardHeader>
@@ -376,33 +386,33 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
                     <Skeleton className="h-4 w-1/2" />
                   </div>
                 ) : insights ? (
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {/* Financial Summary */}
                     <div>
-                      <h4 className="font-semibold mb-2 flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4" />
+                      <h4 className="font-semibold mb-2 flex items-center gap-2 text-sm sm:text-base">
+                        <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
                         Financial Summary
                       </h4>
-                      <Card className="p-4 bg-blue-50 dark:bg-blue-950">
-                        <p className="text-sm">{insights.summary}</p>
+                      <Card className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-950">
+                        <p className="text-xs sm:text-sm">{insights.summary}</p>
                       </Card>
                     </div>
 
                     {/* Top Categories Analysis */}
                     {insights.topCategories && insights.topCategories.length > 0 && (
                       <div>
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
-                          <BarChart3 className="h-4 w-4" />
+                        <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base">
+                          <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
                           Spending Analysis
                         </h4>
-                        <div className="grid gap-3">
+                        <div className="grid gap-2 sm:gap-3">
                           {insights.topCategories.map((item: string, index: number) => (
-                            <Card key={index} className="p-3">
+                            <Card key={index} className="p-2 sm:p-3">
                               <div className="flex items-start gap-2">
-                                <Badge variant="secondary" className="text-xs mt-0.5">
+                                <Badge variant="secondary" className="text-xs mt-0.5 flex-shrink-0">
                                   {index + 1}
                                 </Badge>
-                                <p className="text-sm flex-1">{item}</p>
+                                <p className="text-xs sm:text-sm flex-1">{item}</p>
                               </div>
                             </Card>
                           ))}
@@ -413,18 +423,18 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
                     {/* Saving Tips */}
                     {insights.savingTips && insights.savingTips.length > 0 && (
                       <div>
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
-                          <Lightbulb className="h-4 w-4" />
+                        <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base">
+                          <Lightbulb className="h-3 w-3 sm:h-4 sm:w-4" />
                           Personalized Saving Tips
                         </h4>
-                        <div className="grid gap-3">
+                        <div className="grid gap-2 sm:gap-3">
                           {insights.savingTips.map((tip: string, index: number) => (
-                            <Card key={index} className="p-4 bg-green-50 dark:bg-green-950">
-                              <div className="flex items-start gap-3">
-                                <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Card key={index} className="p-3 sm:p-4 bg-green-50 dark:bg-green-950">
+                              <div className="flex items-start gap-2 sm:gap-3">
+                                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0 mt-0.5">
                                   <span className="text-xs">💡</span>
                                 </div>
-                                <p className="text-sm">{tip}</p>
+                                <p className="text-xs sm:text-sm">{tip}</p>
                               </div>
                             </Card>
                           ))}
@@ -435,18 +445,18 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
                     {/* Budget Recommendations */}
                     {insights.budgetRecommendations && insights.budgetRecommendations.length > 0 && (
                       <div>
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
-                          <Target className="h-4 w-4" />
+                        <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base">
+                          <Target className="h-3 w-3 sm:h-4 sm:w-4" />
                           Budget Recommendations
                         </h4>
-                        <div className="grid gap-3">
+                        <div className="grid gap-2 sm:gap-3">
                           {insights.budgetRecommendations.map((rec: string, index: number) => (
-                            <Card key={index} className="p-4 bg-purple-50 dark:bg-purple-950">
-                              <div className="flex items-start gap-3">
-                                <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                  <Target className="h-3 w-3" />
+                            <Card key={index} className="p-3 sm:p-4 bg-purple-50 dark:bg-purple-950">
+                              <div className="flex items-start gap-2 sm:gap-3">
+                                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                  <Target className="h-2 w-2 sm:h-3 sm:w-3" />
                                 </div>
-                                <p className="text-sm">{rec}</p>
+                                <p className="text-xs sm:text-sm">{rec}</p>
                               </div>
                             </Card>
                           ))}
@@ -455,10 +465,10 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
                     )}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Brain className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="mb-2">No insights generated yet</p>
-                    <p className="text-sm">Click "Generate AI Insights" to get personalized financial analysis</p>
+                  <div className="text-center py-6 sm:py-8 text-muted-foreground">
+                    <Brain className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="mb-2 text-sm sm:text-base">No insights generated yet</p>
+                    <p className="text-xs sm:text-sm">Click "Generate AI Insights" to get personalized financial analysis</p>
                   </div>
                 )}
               </CardContent>
