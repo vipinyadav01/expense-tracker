@@ -1,0 +1,9 @@
+# Handle client-side routing
+/*    /index.html   200
+
+# API routes (if needed for future serverless functions)
+/api/*  https://your-api-domain.com/api/:splat  200
+
+# Handle static assets
+/_next/static/*  /_next/static/:splat  200
+/favicon.ico     /favicon.ico          200 
