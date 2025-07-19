@@ -12,7 +12,6 @@ const nextConfig = {
     unoptimized: true,
   },
   // Cloudflare Pages specific configuration
-  output: 'export',
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
   // Disable server-side features for static export
@@ -28,4 +27,5 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+
+export default nextConfig;
