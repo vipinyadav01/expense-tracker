@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server"
-import { supabase } from "@/lib/supabase"
+import { supabase, ensureUserExists } from "@/lib/supabase"
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
@@ -8,6 +8,9 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    // Ensure user exists in Supabase
+    await ensureUserExists(userId)
 
     const { data, error } = await supabase
       .from("transactions")
@@ -38,6 +41,9 @@ export async function POST(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    // Ensure user exists in Supabase
+    await ensureUserExists(userId)
 
     const body = await request.json()
     const { amount, description, category_id, transaction_date, type } = body
