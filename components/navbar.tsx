@@ -72,10 +72,10 @@ export default function Navbar() {
                 <IndianRupee className="h-5 w-5 text-white" />
               </div>
               <span className="font-bold text-lg bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent sm:block hidden">
-                Expense Tracker
+                Veritas Money
               </span>
               <span className="font-bold text-sm bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent sm:hidden block">
-                ExpenseTracker
+                Veritas
               </span>
             </Link>
           </div>
@@ -165,7 +165,7 @@ export default function Navbar() {
                           <IndianRupee className="h-5 w-5 text-white" />
                         </div>
                         <div>
-                          <h2 className="font-bold text-lg">Expense Tracker</h2>
+                          <h2 className="font-bold text-lg">Veritas Money</h2>
                           <p className="text-xs text-muted-foreground">Financial Management</p>
                         </div>
                       </div>

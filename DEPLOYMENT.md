@@ -44,7 +44,7 @@ NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
 
 2. **Configure Build Settings**
    ```
-   Project name: expense-tracker
+   Project name: veritas-money
    Production branch: main (or your default branch)
    Framework preset: Next.js
    Build command: npm run build

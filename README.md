@@ -1,4 +1,4 @@
-# Expense Tracker Pro
+# Veritas Money
 
 A modern, AI-powered expense tracking and financial insights web app built with Next.js, Clerk, Supabase, and Tailwind CSS.
 
@@ -32,8 +32,8 @@ A modern, AI-powered expense tracking and financial insights web app built with 
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/expense-tracker.git
-cd expense-tracker
+git clone https://github.com/your-username/veritas-money.git
+cd veritas-money
 ```
 
 ### 2. Install dependencies

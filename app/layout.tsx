@@ -8,9 +8,9 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "ExpenseTracker Pro",
-  description: "AI-powered expense tracking and financial insights",
-    generator: 'v0.dev'
+  title: "Veritas Money - AI-Powered Financial Management",
+  description: "Take control of your finances with AI-powered insights, smart budgeting, and comprehensive expense tracking.",
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
