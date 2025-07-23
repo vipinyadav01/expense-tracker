@@ -32,13 +32,6 @@ const genAI = process.env.GEMINI_API_KEY
   ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
   : null;
 
-export interface FinancialInsights {
-  summary: string
-  topCategories: string[]
-  savingTips: string[]
-  budgetRecommendations: string[]
-}
-
 /**
  * Generates financial insights from transaction and budget data.
  *
@@ -58,16 +51,16 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
 
   const totalExpenses = transactions
     .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + Number.parseFloat(t.amount.toString()), 0)
+    .reduce((sum: number, t: any) => sum + Number.parseFloat(t.amount.toString()), 0)
 
   const totalIncome = transactions
     .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + Number.parseFloat(t.amount.toString()), 0)
+    .reduce((sum: number, t: any) => sum + Number.parseFloat(t.amount.toString()), 0)
 
   const categorySpending = transactions
     .filter((t) => t.type === "expense")
     .reduce(
-      (acc, t) => {
+      (acc: Record<string, number>, t: any) => {
         const category = t.categories?.name || "Other"
         acc[category] = (acc[category] || 0) + Number.parseFloat(t.amount.toString())
         return acc
@@ -81,7 +74,7 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
   const generateFallbackInsights = () => {
     const netIncome = totalIncome - totalExpenses
     const topCategories = Object.entries(categorySpending)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([,a]: [string, number], [,b]: [string, number]) => (b as number) - (a as number))
       .slice(0, 3)
 
     let summary = ""
@@ -96,8 +89,9 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
     }
 
     const topCategoriesAnalysis = topCategories.map(([category, amount], index) => {
-      const percentage = totalExpenses > 0 ? ((amount / totalExpenses) * 100).toFixed(1) : "0"
-      return `${category} is your #${index + 1} expense category with ₹${amount.toFixed(2)} spent (${percentage}% of total spending)`
+      const amt = amount as number
+      const percentage = totalExpenses > 0 ? ((amt / totalExpenses) * 100).toFixed(1) : "0"
+      return `${category} is your #${index + 1} expense category with ₹${amt.toFixed(2)} spent (${percentage}% of total spending)`
     })
 
     // Personalized saving tips based on actual data
@@ -154,7 +148,7 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
     
     Spending by Category:
     ${Object.entries(categorySpending)
-      .map(([category, amount]) => `- ${category}: ₹${amount.toFixed(2)}`)
+      .map(([category, amount]) => `- ${category}: ₹${(amount as number).toFixed(2)}`)
       .join('\n')}
     
     Active Budgets:
@@ -212,4 +206,41 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
     // Return fallback insights instead of error message
     return generateFallbackInsights()
   }
+}
+
+/**
+ * Calls the Gemini 1.5 Flash REST API directly with a prompt.
+ * @param prompt The prompt string to send to Gemini.
+ * @param apiKey Your Gemini API key.
+ * @returns The generated content as a string.
+ */
+export async function generateContentWithGeminiFlash(prompt: string, apiKey: string): Promise<string> {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+  const body = {
+    contents: [
+      {
+        parts: [
+          { text: prompt }
+        ]
+      }
+    ]
+  }
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  })
+
+  if (!response.ok) {
+    throw new Error(`Gemini API error: ${response.status} ${response.statusText}`)
+  }
+
+  const data = await response.json()
+  // The response structure: { candidates: [ { content: { parts: [ { text: ... }] } } ] }
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
+  if (!text) throw new Error("No content returned from Gemini API")
+  return text
 }
