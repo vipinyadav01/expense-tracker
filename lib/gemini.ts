@@ -45,12 +45,6 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
  * @returns A promise that resolves to a FinancialInsights object.
  */
 export async function generateFinancialInsights(transactions: any[], budgets: any[]): Promise<FinancialInsights> {
-  console.log('🔍 Generating insights for:', { 
-    transactionCount: transactions.length, 
-    budgetCount: budgets.length,
-    hasApiKey: !!process.env.GEMINI_API_KEY 
-  })
-
   const totalExpenses = transactions
     .filter((t) => t.type === "expense")
     .reduce((sum: number, t: any) => sum + Number.parseFloat(t.amount.toString()), 0)
@@ -69,8 +63,6 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
       },
       {} as Record<string, number>,
     )
-
-  console.log('💰 Financial Data:', { totalIncome, totalExpenses, categorySpending })
 
   // Generate fallback insights based on transaction data
   const generateFallbackInsights = () => {
@@ -131,12 +123,10 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
 
   // If no API key or no transactions, return fallback insights
   if (!genAI) {
-    console.log('⚠️ No Gemini API key found, using fallback insights')
     return generateFallbackInsights()
   }
 
   if (transactions.length === 0) {
-    console.log('⚠️ No transactions found, using fallback insights')
     return generateFallbackInsights()
   }
 
@@ -172,7 +162,6 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
   `
 
   try {
-    console.log('🤖 Calling Gemini API...')
     const model = genAI.getGenerativeModel({ 
       model: "gemini-1.5-flash",
       generationConfig: {
@@ -185,27 +174,21 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
     const response = await result.response
     const text = response.text()
     
-    console.log('🤖 Gemini API response received:', text.substring(0, 200) + '...')
-
     // Try to parse JSON, fallback to structured insights if parsing fails
     try {
       const parsed = JSON.parse(text)
-      console.log('✅ Successfully parsed AI response')
       
       // Validate the response has required fields
       if (parsed.summary && parsed.topCategories && parsed.savingTips && parsed.budgetRecommendations) {
         return parsed
       } else {
-        console.log('⚠️ AI response missing required fields, using fallback')
         return generateFallbackInsights()
       }
     } catch (parseError) {
-      console.log('⚠️ Failed to parse AI response as JSON, using fallback')
       return generateFallbackInsights()
     }
   } catch (error) {
-    console.error("❌ Gemini API error:", error)
-    // Return fallback insights instead of error message
+    // Gemini API error
     return generateFallbackInsights()
   }
 }
