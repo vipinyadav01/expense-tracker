@@ -19,7 +19,7 @@ interface Budget {
 }
 
 // Defines the structure for both AI-generated and fallback insights.
-interface FinancialInsights {
+export interface FinancialInsights {
   summary: string;
   topCategories: string[];
   savingTips: string[];
@@ -28,9 +28,11 @@ interface FinancialInsights {
 
 // --- Gemini API Initialization ---
 // Initialize the Generative AI client if the API key is available.
-const genAI = process.env.GEMINI_API_KEY
-  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-  : null;
+const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+if (!GEMINI_API_KEY) {
+  throw new Error("GEMINI_API_KEY is not set. Please set NEXT_PUBLIC_GEMINI_API_KEY in your environment.");
+}
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 /**
  * Generates financial insights from transaction and budget data.
@@ -214,8 +216,11 @@ export async function generateFinancialInsights(transactions: any[], budgets: an
  * @param apiKey Your Gemini API key.
  * @returns The generated content as a string.
  */
-export async function generateContentWithGeminiFlash(prompt: string, apiKey: string): Promise<string> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+export async function generateContentWithGeminiFlash(prompt: string): Promise<string> {
+  if (!GEMINI_API_KEY) {
+    throw new Error("GEMINI_API_KEY is not set. Please set NEXT_PUBLIC_GEMINI_API_KEY in your environment.");
+  }
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
   const body = {
     contents: [
       {
@@ -224,7 +229,7 @@ export async function generateContentWithGeminiFlash(prompt: string, apiKey: str
         ]
       }
     ]
-  }
+  };
 
   const response = await fetch(url, {
     method: "POST",
@@ -232,15 +237,15 @@ export async function generateContentWithGeminiFlash(prompt: string, apiKey: str
       "Content-Type": "application/json"
     },
     body: JSON.stringify(body)
-  })
+  });
 
   if (!response.ok) {
-    throw new Error(`Gemini API error: ${response.status} ${response.statusText}`)
+    throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
   }
 
-  const data = await response.json()
+  const data = await response.json();
   // The response structure: { candidates: [ { content: { parts: [ { text: ... }] } } ] }
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
-  if (!text) throw new Error("No content returned from Gemini API")
-  return text
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error("No content returned from Gemini API");
+  return text;
 }

@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Brain, TrendingUp, TrendingDown, IndianRupee, Target, Lightbulb, BarChart3, PieChart } from 'lucide-react'
-import { generateFinancialInsights, type FinancialInsights } from "@/lib/gemini" 
+import { generateContentWithGeminiFlash, type FinancialInsights } from "@/lib/gemini"
 import Navbar from "@/components/navbar"
 import ExpenseChart from "@/components/expense-chart"
 import { useUserInit } from "@/hooks/use-user-init"
@@ -172,14 +172,20 @@ export default function InsightsPage({ userId }: InsightsPageProps) {
 
   // --- AI Insights Generation ---
   const generateInsights = async () => {
-    if (transactions.length === 0) return;
     setInsightsLoading(true);
     try {
-      const aiInsights = await generateFinancialInsights(transactions, budgets);
-      setInsights(aiInsights);
+      const response = await fetch("/api/insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      const data = await response.json();
+      if (data.summary) {
+        setInsights(data);
+      } else if (data.error) {
+        console.error("AI Insights error:", data.error);
+      }
     } catch (error) {
       console.error("Error generating insights:", error);
-      // Optionally set an error state to show in the UI
     } finally {
       setInsightsLoading(false);
     }
